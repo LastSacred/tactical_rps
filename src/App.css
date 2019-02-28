@@ -1,13 +1,13 @@
-.react-board-cell {
+/* .board-cell {
   width: 30px;
   height: 30px;
   border: 1px solid black;
   float: left;
 }
 
-.react-board {
+.game-board {
   display: inline-grid;
-}
+} */
 
 .App {
   text-align: center;
