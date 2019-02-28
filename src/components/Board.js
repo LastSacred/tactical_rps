@@ -1,29 +1,30 @@
 import React, {Component} from 'react'
 // import ReactBoard from 'react-board'
-import Grid from 'semantic-ui-react'
+import Semantic, { Grid } from 'semantic-ui-react'
 import Square from './Square'
+import Tile from './Tile'
 
 class Board extends Component {
   state = {
-    board: new Array(8).fill(new Array(8).fill('hello'))
+    board: new Array(7).fill(new Array(7).fill(<Tile />))
   }
 
-  clickHandler = ({col, row, cellName, cellValue}) => {
-    console.log(`${col} ${row} ${cellName} ${cellValue}`);
+  handleClick = (event) => {
+    console.log(event.target)
   }
 
   createCells = () => {
-    return this.state.board.map((row, index) => {
-      return <Grid>{row.map((cell, index) => <Grid.Column>X</Grid.Column>)}</Grid>
+    return this.state.board.map((row, rind) => {
+      return <Grid.Row>{row.map((cell, cind) => <Grid.Column id={'cell-' + rind + cind} className={'board-cell'}>{cell}</Grid.Column>)}</Grid.Row>
       })
     }
 
 
   render() {
     return (
-      <div className={"game-board"}>
+      <Grid className={"game-board"} onClick={this.handleClick}>
         {this.createCells()}
-      </div>
+      </Grid>
     )
   }
 

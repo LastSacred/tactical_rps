@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 const Square = (props) => {
 
   return(
-    <div>props.message</div>
+    <div >stuff</div>
   )
 }
 
