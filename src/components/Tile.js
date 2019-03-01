@@ -5,7 +5,7 @@ class Tile extends Component {
     super(props)
 
     this.move = Math.floor(Math.random() * 3 + 1)
-    this.attack = ["rock", "paper", "scisors"][Math.floor(Math.random() * 3)]
+    this.attack = ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)]
 
     this.state = {
       strength: Math.floor(Math.random() * 3 + 1)

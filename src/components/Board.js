@@ -1,40 +1,33 @@
 import React, {Component} from 'react'
-// import ReactBoard from 'react-board'
-import Semantic, { Grid } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import Square from './Square'
-import Tile from './Tile'
 
 class Board extends Component {
-  state = {
-    board: new Array(7).fill(new Array(7).fill(<Tile />))
-  }
-
-  handleClick = (event) => {
-    console.log(event.target)
-  }
-
-  createCells = () => {
-    return this.state.board.map((row, rind) => {
-      return <Grid.Row>{row.map((cell, cind) => <Grid.Column id={'cell-' + rind + cind} className={'board-cell'}>{cell}</Grid.Column>)}</Grid.Row>
+    createCells = () => {
+    return this.props.board.map((row, rind) => {
+      return (
+        <Grid.Row key={rind}>
+          {row.map((cell, cind) => <Square
+            key={rind + cind}
+            row={rind}
+            cell={cind}
+            tile={cell}
+            handleClick={this.props.handleClick}
+          />)}
+        </Grid.Row>
+      )
       })
     }
 
 
   render() {
     return (
-      <Grid className={"game-board"} onClick={this.handleClick}>
+      <Grid className={"game-board"}>
         {this.createCells()}
       </Grid>
     )
   }
 
 }
-
-// <ReactBoard
-//   size={8}
-//   values={this.state.board}
-//   highlight={[[0,0]]}
-//   clickHandler={this.clickHandler}
-// />
 
 export default Board
