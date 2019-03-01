@@ -7,7 +7,7 @@ import Board from './Board'
 function startBoard() {
   return (
     [
-      [{strength: 3, attack: 'scissors', move: 2},null,null,null,null,null,null],
+      [{strength: 3, attack: 'scissors', move: 2, owner:1},null,{strength: 2, attack: 'paper', move: 1, owner:2},null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
@@ -31,17 +31,28 @@ class Game extends Component {
     this.setState({
       selected: {
         onBoard: true,
+        tile: tile,
         row: row,
         cell: cell
       }
     })
   }
 
+  validPlacement = (row, cell) => {
+    if (this.state.board[row][cell]) return false
+
+    // TODO: prevent jumping over enemy squares
+
+    const distance = Math.abs(row - this.state.selected.row) + Math.abs(cell - this.state.selected.cell)
+    return distance <= this.state.selected.tile.move
+  }
+
   placeTile = (row, cell) => {
     const newBoard = [...this.state.board]
-    const selectedTile = this.state.board[this.state.selected.row][this.state.selected.cell]
 
-    newBoard[row][cell] = selectedTile
+    if (!this.validPlacement(row, cell)) return
+
+    newBoard[row][cell] = this.state.selected.tile
     newBoard[this.state.selected.row][this.state.selected.cell] = null
 
     this.setState({
@@ -52,9 +63,13 @@ class Game extends Component {
 
   handleClick = (row, cell) => {
     const selected = this.state.selected
+
     if (selected) {
-      if (row === selected.row && cell === selected.cell) return
-      this.placeTile(row, cell)
+      if (row === selected.row && cell === selected.cell) {
+        this.setState({selected: null})
+      } else {
+        this.placeTile(row, cell)
+      }
     } else {
       this.selectTile(row, cell)
     }
@@ -62,7 +77,7 @@ class Game extends Component {
 
   render() {
     return(
-      <Board board={this.state.board} handleClick={this.handleClick} />
+      <Board board={this.state.board} selected={this.state.selected} handleClick={this.handleClick} />
     )
   }
 }

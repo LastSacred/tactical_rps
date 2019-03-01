@@ -12,6 +12,7 @@ class Board extends Component {
             row={rind}
             cell={cind}
             tile={cell}
+            selected={this.props.selected}
             handleClick={this.props.handleClick}
           />)}
         </Grid.Row>
