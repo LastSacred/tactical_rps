@@ -14,7 +14,7 @@ class Square extends Component {
       )
     } else {
       return(
-        <Grid.Column className={'board-cell'} onClick={() => this.props.handleClick(this.props.row, this.props.cell, this.props.tile)}>
+        <Grid.Column className={'board-cell'} onClick={() => this.props.handleClick(this.props.row, this.props.cell)}>
         </Grid.Column>
       )
     }

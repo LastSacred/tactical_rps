@@ -21,11 +21,20 @@ function startBoard() {
 class Game extends Component {
   state = {
     board: startBoard(),
-    selected: {
-      onBoard: true,
-      row: 0,
-      cell: 0
-    }
+    selected: null
+  }
+
+  selectTile = (row, cell) => {
+    const tile = this.state.board[row][cell]
+
+    if (!tile) return
+    this.setState({
+      selected: {
+        onBoard: true,
+        row: row,
+        cell: cell
+      }
+    })
   }
 
   placeTile = (row, cell) => {
@@ -35,12 +44,20 @@ class Game extends Component {
     newBoard[row][cell] = selectedTile
     newBoard[this.state.selected.row][this.state.selected.cell] = null
 
-
-    this.setState({board: newBoard})
+    this.setState({
+      board: newBoard,
+      selected: null
+    })
   }
 
-  handleClick = (row, cell, tile) => {
-    this.placeTile(row, cell)
+  handleClick = (row, cell) => {
+    const selected = this.state.selected
+    if (selected) {
+      if (row === selected.row && cell === selected.cell) return
+      this.placeTile(row, cell)
+    } else {
+      this.selectTile(row, cell)
+    }
   }
 
   render() {
