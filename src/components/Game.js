@@ -21,7 +21,22 @@ function startBoard() {
 class Game extends Component {
   state = {
     board: startBoard(),
+    pool: []
     selected: null
+  }
+
+  fillPool = () => {
+    let newPool = [...this.state.pool]
+
+    while (newPool.length < 7) {
+      const newTile = {
+        strength: 3,
+        attack: 'scissors',
+        move: 2, 
+        owner:1
+      }
+
+    }
   }
 
   selectTile = (row, cell) => {
