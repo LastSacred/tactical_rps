@@ -20,8 +20,7 @@ class Square extends Component {
       if (this.isSelected()) {
         cssClass += ' selected'
       } else {
-        const distance = Math.abs(this.props.row - this.props.selected.row) + Math.abs(this.props.cell - this.props.selected.cell)
-        if (distance <= this.props.selected.tile.move) cssClass += ' inRange'
+        if (this.props.validPlacement(this.props.row, this.props.cell)) cssClass += ' inRange'
       }
 
     }

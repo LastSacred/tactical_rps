@@ -14,6 +14,7 @@ class Board extends Component {
             tile={cell}
             selected={this.props.selected}
             handleClick={this.props.handleClick}
+            validPlacement={this.props.validPlacement}
           />)}
         </Grid.Row>
       )

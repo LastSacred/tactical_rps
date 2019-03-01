@@ -77,7 +77,12 @@ class Game extends Component {
 
   render() {
     return(
-      <Board board={this.state.board} selected={this.state.selected} handleClick={this.handleClick} />
+      <Board
+      board={this.state.board}
+      selected={this.state.selected}
+      handleClick={this.handleClick}
+      validPlacement={this.validPlacement}
+      />
     )
   }
 }
