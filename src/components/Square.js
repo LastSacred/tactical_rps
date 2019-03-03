@@ -16,7 +16,7 @@ class Square extends Component {
       if (this.props.tile.owner === 2) cssClass += ' player2'
     }
 
-    if (this.props.selected) {
+    if (this.props.selected && this.props.row !== 'pool') {
       if (this.isSelected()) {
         cssClass += ' selected'
       } else {
