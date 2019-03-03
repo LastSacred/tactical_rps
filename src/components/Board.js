@@ -3,7 +3,8 @@ import { Grid } from 'semantic-ui-react'
 import Square from './Square'
 
 class Board extends Component {
-    createCells = () => {
+
+  createCells = () => {
     return this.props.board.map((row, rind) => {
       return (
         <Grid.Row key={rind}>
@@ -18,13 +19,13 @@ class Board extends Component {
           />)}
         </Grid.Row>
       )
-      })
-    }
+    })
+  }
 
 
   render() {
     return (
-      <Grid className={"game-board"}>
+      <Grid className={"game board"}>
         {this.createCells()}
       </Grid>
     )

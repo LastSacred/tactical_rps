@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import Board from './Board'
+import Pool from './Pool'
 
 // new Array(7).fill(new Array(7).fill(null))
-// board: [[null,null,null,null,null,null,null],[null,null,null,null,null,null,null],[null,null,null,null,null,null,null],[null,null,null,null,null,null,null],[null,null,null,null,null,null,null],[null,null,null,null,null,null,null],[null,null,null,null,null,null,null]
 
 function startBoard() {
   return (
@@ -21,31 +21,45 @@ function startBoard() {
 class Game extends Component {
   state = {
     board: startBoard(),
-    pool: []
-    selected: null
+    pool: [],
+    selected: null,
+    playerTurn: 1
   }
 
   fillPool = () => {
     let newPool = [...this.state.pool]
 
-    while (newPool.length < 7) {
-      const newTile = {
-        strength: 3,
-        attack: 'scissors',
-        move: 2, 
-        owner:1
-      }
-
+    if (newPool.length >= 7) return
+    const newTile = {
+      strength: Math.floor(Math.random() * 3 + 1),
+      attack: ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)],
+      move: Math.floor(Math.random() * 3 + 1),
+      owner: null
     }
+    newPool.push(newTile)
+    this.setState({pool: newPool})
+
+
+  }
+
+  buyTile = (cell) => {
+    // take money from player
+
+    const newPool = [...this.state.pool]
+    newPool[cell].owner = this.state.playerTurn
   }
 
   selectTile = (row, cell) => {
-    const tile = this.state.board[row][cell]
+    let tile
+    if (row === 'pool') {
+      tile = this.state.pool[cell]
+    } else {
+      tile = this.state.board[row][cell]
+    }
 
     if (!tile) return
     this.setState({
       selected: {
-        onBoard: true,
         tile: tile,
         row: row,
         cell: cell
@@ -56,6 +70,14 @@ class Game extends Component {
   validPlacement = (row, cell) => {
     if (this.state.board[row][cell]) return false
 
+    if (this.state.selected.row === 'pool') {
+      if (this.state.playerTurn === 1) {
+        return cell === 0
+      } else {
+        return cell === 6
+      }
+    }
+
     // TODO: prevent jumping over enemy squares
 
     const distance = Math.abs(row - this.state.selected.row) + Math.abs(cell - this.state.selected.cell)
@@ -64,19 +86,25 @@ class Game extends Component {
 
   placeTile = (row, cell) => {
     const newBoard = [...this.state.board]
+    const newPool = [...this.state.pool]
 
     if (!this.validPlacement(row, cell)) return
 
     newBoard[row][cell] = this.state.selected.tile
-    newBoard[this.state.selected.row][this.state.selected.cell] = null
+    if (this.state.selected.row === 'pool') {
+      newPool.splice([this.state.selected.cell], 1)
+    } else {
+      newBoard[this.state.selected.row][this.state.selected.cell] = null
+    }
 
     this.setState({
       board: newBoard,
+      pool: newPool,
       selected: null
     })
   }
 
-  handleClick = (row, cell) => {
+  boardClick = (row, cell) => {
     const selected = this.state.selected
 
     if (selected) {
@@ -90,14 +118,29 @@ class Game extends Component {
     }
   }
 
+  poolClick = (row, cell) => {
+    if (this.state.selected) return
+    this.buyTile(cell)
+    this.selectTile(row,cell)
+  }
+
   render() {
     return(
-      <Board
-      board={this.state.board}
-      selected={this.state.selected}
-      handleClick={this.handleClick}
-      validPlacement={this.validPlacement}
-      />
+      <div>
+        <Board
+        board={this.state.board}
+        selected={this.state.selected}
+        handleClick={this.boardClick}
+        validPlacement={this.validPlacement}
+        />
+
+        <Pool
+        pool={this.state.pool}
+        fillPool={this.fillPool}
+        selected={this.state.selected}
+        handleClick={this.poolClick}
+        />
+      </div>
     )
   }
 }

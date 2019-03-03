@@ -1,6 +1,7 @@
-.game-board {
+.board {
   display: inline-grid;
-  border: 2px solid black;
+  margin-top: 20px;
+  border: 2px solid #54514B;
 }
 
 .square {
@@ -31,8 +32,21 @@
   border: 1px solid #FFFE00;
 }
 
+.cost {
+  width: 62px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #F6F4F0;
+  font-size: large;
+  font-weight: bold;
+  color: #397E32;
+  float: left;
+}
+
 .App {
   text-align: center;
+  background-color: #EEE2EA;
+  padding-bottom: 100px
 }
 
 .App-logo {
