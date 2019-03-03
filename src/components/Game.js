@@ -23,7 +23,14 @@ class Game extends Component {
     board: startBoard(),
     pool: [],
     selected: null,
-    playerTurn: 1
+    turn: {
+      player: 1,
+      phase: 'buy'
+    }
+  }
+
+  nextPhase = () => {
+    const phaseOrder = ['buy', 'move', 'fight']
   }
 
   fillPool = () => {
@@ -46,7 +53,7 @@ class Game extends Component {
     // take money from player
 
     const newPool = [...this.state.pool]
-    newPool[cell].owner = this.state.playerTurn
+    newPool[cell].owner = this.state.turn.player
   }
 
   selectTile = (row, cell) => {
@@ -71,7 +78,7 @@ class Game extends Component {
     if (this.state.board[row][cell]) return false
 
     if (this.state.selected.row === 'pool') {
-      if (this.state.playerTurn === 1) {
+      if (this.state.turn.player === 1) {
         return cell === 0
       } else {
         return cell === 6
