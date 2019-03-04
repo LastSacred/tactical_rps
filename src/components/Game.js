@@ -7,7 +7,7 @@ import Pool from './Pool'
 function startBoard() {
   return (
     [
-      [{strength: 3, attack: 'scissors', move: 2, owner:1},null,{strength: 2, attack: 'paper', move: 1, owner:2},null,null,null,null],
+      [{strength: 3, attack: 'scissors', move: 2, owner:1},{strength: 2, attack: 'paper', move: 1, owner:2},null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
@@ -29,8 +29,15 @@ class Game extends Component {
     }
   }
 
-  nextPhase = () => {
-    const phaseOrder = ['buy', 'move', 'fight']
+  setPhase = (phase) => {
+    // const phaseOrder = ['buy', 'move', 'attack']
+    if (!this.validTargetExists()) phase = "move"
+    const newTurn = {...this.state.turn, phase: phase}
+    let newSelected = (phase === "attack" ? this.state.selected : null)
+    this.setState({
+      turn: newTurn,
+      selected: newSelected
+    })
   }
 
   fillPool = () => {
@@ -91,6 +98,22 @@ class Game extends Component {
     return distance <= this.state.selected.tile.move
   }
 
+  validTargetExists = () => {
+    let res = false
+    this.state.board.forEach((row, rind) => {
+      row.forEach((cell, cind) => {
+        if(this.validTarget(rind, cind, cell)) res = true
+      })
+    })
+    return res
+  }
+
+  validTarget = (row, cell, tile) => {
+    // debugger
+    if (this.state.selected.row === "pool") return
+    return (Math.abs(row - this.state.selected.row) <= 1 && Math.abs(cell - this.state.selected.cell) <= 1) && tile && tile.owner !== this.state.selected.tile.owner
+  }
+
   placeTile = (row, cell) => {
     const newBoard = [...this.state.board]
     const newPool = [...this.state.pool]
@@ -98,34 +121,100 @@ class Game extends Component {
     if (!this.validPlacement(row, cell)) return
 
     newBoard[row][cell] = this.state.selected.tile
+    let newSelected
     if (this.state.selected.row === 'pool') {
       newPool.splice([this.state.selected.cell], 1)
     } else {
       newBoard[this.state.selected.row][this.state.selected.cell] = null
+      newSelected = {...this.state.selected, row: row, cell: cell}
     }
+
+    // call valid attack?
+    // break up setState
 
     this.setState({
       board: newBoard,
       pool: newPool,
-      selected: null
-    })
+      selected: newSelected
+    }, this.setPhase('attack'))
   }
 
   boardClick = (row, cell) => {
     const selected = this.state.selected
 
-    if (selected) {
-      if (row === selected.row && cell === selected.cell) {
-        this.setState({selected: null})
-      } else {
+    switch (this.state.turn.phase) {
+      case "buy":
+        if (!this.state.selected) return
         this.placeTile(row, cell)
-      }
-    } else {
-      this.selectTile(row, cell)
+        this.setPhase("move")
+        break
+      case "move":
+        // if (!this.state.selected) {
+        //   this.selectTile(row, cell)
+        //   return
+        // }
+        // break
+        if (selected) {
+          if (row === selected.row && cell === selected.cell) {
+            this.setState({selected: null})
+          } else {
+            this.placeTile(row, cell)
+          }
+        } else {
+          this.selectTile(row, cell)
+        }
+        // this.setPhase("attack")
+        break
+      case "attack":
+        if (row === this.state.selected.row && cell === this.state.selected.cell) {
+          this.setPhase('move')
+          return
+        }
+        const tile = this.state.board[row][cell]
+        if (!this.validTarget) return
+        this.fight(row, cell)
+        this.setPhase("move")
+        break
     }
+
+    // if (selected) {
+    //   if (row === selected.row && cell === selected.cell) {
+    //     this.setState({selected: null})
+    //   } else {
+    //     this.placeTile(row, cell)
+    //   }
+    // } else {
+    //   this.selectTile(row, cell)
+    // }
   }
 
+  fight = (row, cell) => {
+    const eff = {
+      rock: {rock: 2, paper: 3, scissors: 1},
+      paper: {paper: 2, rock: 1, scissors: 3},
+      scissors: {scissors: 2, rock: 3, paper: 1}
+    }
+
+    const newBoard = this.state.board
+    let defender = newBoard[row][cell]
+    let attacker = newBoard[this.state.selected.row][this.state.selected.cell]
+    defender.strength -= eff[defender.attack][attacker.attack]
+    attacker.strength -= eff[attacker.attack][defender.attack]
+
+    if (defender.strength <= 0) defender = null
+    if (attacker.strength <= 0) attacker = null
+    newBoard[row][cell] = defender
+    newBoard[this.state.selected.row][this.state.selected.cell] = attacker
+
+    this.setState({
+      board: newBoard,
+    })
+  }
+
+
+
   poolClick = (row, cell) => {
+    if (this.state.turn.phase !== "buy") return
     if (this.state.selected) return
     this.buyTile(cell)
     this.selectTile(row,cell)
