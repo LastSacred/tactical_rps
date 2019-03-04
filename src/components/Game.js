@@ -88,7 +88,7 @@ class Game extends Component {
   }
 
   validPlacement = (row, cell) => {
-    if (this.state.board[row][cell]) return false
+    // if (this.state.board[row][cell]) return false
 
     if (this.state.selected.row === 'pool') {
       if (this.state.turn.player === 1) {
@@ -120,19 +120,20 @@ class Game extends Component {
   }
 
   placeTile = (row, cell) => {
+    if (!this.validPlacement(row, cell)) return
+    
     const newBoard = [...this.state.board]
     const newPool = [...this.state.pool]
-
-    if (!this.validPlacement(row, cell)) return
-
-    newBoard[row][cell] = this.state.selected.tile
     let newSelected
+
     if (this.state.selected.row === 'pool') {
       newPool.splice([this.state.selected.cell], 1)
     } else {
       newBoard[this.state.selected.row][this.state.selected.cell] = null
       newSelected = {...this.state.selected, row: row, cell: cell}
     }
+
+    newBoard[row][cell] = this.state.selected.tile
 
     // call valid attack?
     // break up setState
@@ -160,11 +161,7 @@ class Game extends Component {
         // }
         // break
         if (selected) {
-          if (row === selected.row && cell === selected.cell) {
-            this.setState({selected: null})
-          } else {
-            this.placeTile(row, cell)
-          }
+          this.placeTile(row, cell)
         } else {
           this.selectTile(row, cell)
         }
