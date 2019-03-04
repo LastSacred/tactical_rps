@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Board from './Board'
 import Pool from './Pool'
+import Player from './Player'
 
 // new Array(7).fill(new Array(7).fill(null))
 
@@ -232,6 +233,9 @@ class Game extends Component {
   render() {
     return(
       <div>
+        <Player id='1' username={'sunny'} />
+        <Player id='2' username={'arthur'} />
+
         <Board
         board={this.state.board}
         selected={this.state.selected}
