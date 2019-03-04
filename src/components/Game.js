@@ -32,7 +32,8 @@ class Game extends Component {
 
   setPhase = (phase, nextTurn=false) => {
     // const phaseOrder = ['buy', 'move', 'attack']
-    if (phase === "attack" && !this.validTargetExists()) phase = "move"
+    if ((phase === "attack") && (!this.state.selected || !this.validTargetExists())) phase = "move"
+
     const newTurn = {...this.state.turn, phase: phase}
     if (nextTurn) {
       newTurn.player = !(newTurn.player - 1) + 1
@@ -114,7 +115,6 @@ class Game extends Component {
   }
 
   validTarget = (row, cell, tile) => {
-    // debugger
     if (this.state.selected.row === "pool") return
     return (Math.abs(row - this.state.selected.row) <= 1 && Math.abs(cell - this.state.selected.cell) <= 1) && tile && tile.owner !== this.state.selected.tile.owner
   }
@@ -141,17 +141,17 @@ class Game extends Component {
       board: newBoard,
       pool: newPool,
       selected: newSelected
-    }, this.setPhase('attack'))
+    }, () => this.setPhase('attack'))
   }
 
   boardClick = (row, cell) => {
     const selected = this.state.selected
+    const tile = this.state.board[row][cell]
 
     switch (this.state.turn.phase) {
       case "buy":
         if (!this.state.selected) return
         this.placeTile(row, cell)
-        this.setPhase("move")
         break
       case "move":
         // if (!this.state.selected) {
@@ -171,12 +171,15 @@ class Game extends Component {
         // this.setPhase("attack")
         break
       case "attack":
+        // const tile = this.state.board[row][cell]
         if (row === this.state.selected.row && cell === this.state.selected.cell) {
           this.setPhase('move')
           return
         }
-        const tile = this.state.board[row][cell]
-        if (!this.validTarget) return
+
+        if (!this.validTarget(row, cell, tile)) return
+
+        // if (!this.validTarget) return
         this.fight(row, cell)
         this.setPhase("move")
         break
@@ -200,14 +203,16 @@ class Game extends Component {
       scissors: {scissors: 2, rock: 3, paper: 1}
     }
 
-    const newBoard = this.state.board
+    const newBoard = [...this.state.board]
     let defender = newBoard[row][cell]
     let attacker = newBoard[this.state.selected.row][this.state.selected.cell]
+
     defender.strength -= eff[defender.attack][attacker.attack]
     attacker.strength -= eff[attacker.attack][defender.attack]
 
     if (defender.strength <= 0) defender = null
     if (attacker.strength <= 0) attacker = null
+
     newBoard[row][cell] = defender
     newBoard[this.state.selected.row][this.state.selected.cell] = attacker
 
