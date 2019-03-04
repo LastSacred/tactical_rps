@@ -88,7 +88,7 @@ class Game extends Component {
   }
 
   validPlacement = (row, cell) => {
-    // if (this.state.board[row][cell]) return false
+    if (this.state.board[row][cell]) return false
 
     if (this.state.selected.row === 'pool') {
       if (this.state.turn.player === 1) {
@@ -120,8 +120,8 @@ class Game extends Component {
   }
 
   placeTile = (row, cell) => {
-    if (!this.validPlacement(row, cell)) return
-    
+    if (!(this.state.selected.row === row && this.state.selected.cell === cell) && !this.validPlacement(row, cell)) return
+
     const newBoard = [...this.state.board]
     const newPool = [...this.state.pool]
     let newSelected
