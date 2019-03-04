@@ -16,6 +16,10 @@
   background-color: #DED6C5;
 }
 
+.square.validTarget {
+  border: 1px solid red;
+}
+
 .square.tile {
   background-color: #E4D5B2;
 }

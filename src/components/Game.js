@@ -25,14 +25,19 @@ class Game extends Component {
     selected: null,
     turn: {
       player: 1,
-      phase: 'buy'
+      phase: 'buy',
+      count: 0
     }
   }
 
-  setPhase = (phase) => {
+  setPhase = (phase, nextTurn=false) => {
     // const phaseOrder = ['buy', 'move', 'attack']
-    if (!this.validTargetExists()) phase = "move"
+    if (phase === "attack" && !this.validTargetExists()) phase = "move"
     const newTurn = {...this.state.turn, phase: phase}
+    if (nextTurn) {
+      newTurn.player = !(newTurn.player - 1) + 1
+      newTurn.count += 1
+    }
     let newSelected = (phase === "attack" ? this.state.selected : null)
     this.setState({
       turn: newTurn,
@@ -220,6 +225,8 @@ class Game extends Component {
     this.selectTile(row,cell)
   }
 
+
+
   render() {
     return(
       <div>
@@ -228,6 +235,8 @@ class Game extends Component {
         selected={this.state.selected}
         handleClick={this.boardClick}
         validPlacement={this.validPlacement}
+        turn={this.state.turn}
+        validTarget={this.validTarget}
         />
 
         <Pool
@@ -235,7 +244,10 @@ class Game extends Component {
         fillPool={this.fillPool}
         selected={this.state.selected}
         handleClick={this.poolClick}
+        // turn={this.state.turn}
         />
+
+        <button onClick={() => {this.setPhase('buy', true)}}>Next Turn</button>
       </div>
     )
   }

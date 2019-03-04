@@ -20,7 +20,8 @@ class Square extends Component {
       if (this.isSelected()) {
         cssClass += ' selected'
       } else {
-        if (this.props.validPlacement(this.props.row, this.props.cell)) cssClass += ' inRange'
+        if (this.props.turn.phase !== "attack" && this.props.validPlacement(this.props.row, this.props.cell)) cssClass += ' inRange'
+        if ('attack' === this.props.turn.phase && this.props.validTarget(this.props.row, this.props.cell, this.props.tile)) cssClass += ' validTarget'
       }
 
     }

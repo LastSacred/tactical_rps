@@ -16,6 +16,8 @@ class Board extends Component {
             selected={this.props.selected}
             handleClick={this.props.handleClick}
             validPlacement={this.props.validPlacement}
+            turn={this.props.turn}
+            validTarget={this.props.validTarget}
           />)}
         </Grid.Row>
       )

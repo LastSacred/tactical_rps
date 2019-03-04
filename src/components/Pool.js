@@ -22,6 +22,7 @@ class Pool extends Component {
             tile={cell}
             selected={this.props.selected}
             handleClick={this.props.handleClick}
+            turn={this.props.turn}
           />)}
         </Grid.Row>
     )
