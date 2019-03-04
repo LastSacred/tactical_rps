@@ -99,10 +99,19 @@ class Game extends Component {
       }
     }
 
+    // row and cell are clicked spot
+    const distance = Math.abs(row - this.state.selected.row) + Math.abs(cell - this.state.selected.cell)
+
     // TODO: prevent jumping over enemy squares
 
-    const distance = Math.abs(row - this.state.selected.row) + Math.abs(cell - this.state.selected.cell)
-    return distance <= this.state.selected.tile.move
+    let openPath = true
+    //hmmmmm
+    // check spaces between (row,cell) and selected if movement is on same line
+    // if opp piece lies between them openPath=false
+    // if movement is DIAGONAL,
+    // check both adjacent squares in the direction of the diagonal && 
+
+    return (distance <= this.state.selected.tile.move && openPath)
   }
 
   validTargetExists = () => {
