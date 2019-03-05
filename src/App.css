@@ -16,9 +16,9 @@
   background-color: #DED6C5;
 }
 
-.square.validTarget {
+/* .square.validTarget {
   border: 1px solid red;
-}
+} */
 
 .square.tile {
   background-color: #E4D5B2;
@@ -28,12 +28,28 @@
   background-color: #E4B4B2;
 }
 
+.square.tile.player1.validTarget {
+  background-color: #AF8B8A;
+}
+
 .square.tile.player2 {
   background-color: #B2C3E4;
 }
 
+.square.tile.player2.validTarget {
+  background-color: #8893A9;
+}
+
 .square.selected {
   border: 1px solid #FFFE00;
+}
+
+.game.board .square.redSide {
+  border-right-color: red;
+}
+
+.game.board .square.blueSide {
+  border-left-color: blue;
 }
 
 .cost {

@@ -23,9 +23,10 @@ class Square extends Component {
         if (this.props.turn.phase !== "attack" && this.props.validPlacement(this.props.row, this.props.cell)) cssClass += ' inRange'
         if ('attack' === this.props.turn.phase && this.props.validTarget(this.props.row, this.props.cell, this.props.tile)) cssClass += ' validTarget'
       }
-
     }
 
+    if (this.props.cell === 2) cssClass += ' redSide'
+    if (this.props.cell === 4) cssClass += ' blueSide'
 
     return cssClass
   }
