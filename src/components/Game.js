@@ -19,25 +19,33 @@ function startBoard() {
 }
 
 class Game extends Component {
-  state = {
-    gameOn: true,
-    board: startBoard(),
-    pool: [],
-    selected: null,
-    turn: {
-      player: 1,
-      phase: 'buy',
-      count: 1
-    },
-    money: {
-      player1: 6,
-      player2: 6
-    },
-    loggedIn: {
-      player1: null,
-      player2: null
+  constructor(props) {
+    super(props)
+
+    this.initialState = {
+      gameOn: false,
+      board: startBoard(),
+      pool: [],
+      selected: null,
+      turn: {
+        player: 1,
+        phase: 'buy',
+        count: 1
+      },
+      money: {
+        player1: 20,
+        player2: 20
+      },
+      loggedIn: {
+        player1: null,
+        player2: null
+      },
+      winner: null
     }
+
+    this.state = this.initialState
   }
+
 
   logIn = (event, name, player) => {
     event.preventDefault()
@@ -46,7 +54,7 @@ class Game extends Component {
 
     newLoggedIn['player' + player] = name
 
-    this.setState({loggedIn: newLoggedIn})
+    this.setState({loggedIn: newLoggedIn}, () => {if (this.state.loggedIn.player1 && this.state.loggedIn.player2) this.toggleGameOn()})
   }
 
   setPhase = (end=false) => {
@@ -97,7 +105,8 @@ class Game extends Component {
         })
       })
       // display something
-      phase = 'end'
+
+      this.setState(this.initialState, () => this.setState({winner: winner}))
     }
 
     if (nextTurn) {
@@ -280,14 +289,6 @@ class Game extends Component {
     }, this.setPhase)
   }
 
-  // choosePhase = () => {
-  //   if (this.state.turn.phase === 'buy') {
-  //     this.setPhase('move')
-  //   } else if (this.s) {
-  //     this.setPhase('attack')
-  //   }
-  // }
-
   boardClick = (row, cell) => {
     const selected = this.state.selected
     const tile = this.state.board[row][cell]
@@ -357,10 +358,17 @@ class Game extends Component {
     this.setState({pool: newPool}, () => this.selectTile(row,cell))
   }
 
+  toggleGameOn = () => {
+    this.setState({
+      gameOn: !this.state.gameOn,
+      winner: null
+    })
+  }
+
   gameOn = () => {
     if (this.state.gameOn) {
       return(
-        <span id={'main'}>
+        <div id={'main'}>
           <Board
           board={this.state.board}
           selected={this.state.selected}
@@ -382,10 +390,21 @@ class Game extends Component {
           <div>
             <div> Turn: {this.state.turn.count} </div>
           </div>
-        </span>
+        </div>
+      )
+    } else if (this.state.winner) {
+      return (
+        <div className={'loginScreen'}>
+          <h1>{this.state.winner} Wins!</h1>
+        </div>
       )
     } else {
-      return <div>hi</div>
+      return (
+        <div className={'loginScreen'}>
+          <h1>Tactical Rock Paper Scisors</h1>
+          <p>Welcome! login or click below for leaderboard stats</p>
+        </div>
+      )
     }
   }
 
