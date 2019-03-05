@@ -8,7 +8,7 @@ import Player from './Player'
 function startBoard() {
   return (
     [
-      [{strength: 3, attack: 'scissors', move: 2, owner:1},{strength: 2, attack: 'paper', move: 1, owner:2},null,null,null,null,null],
+      [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
@@ -91,6 +91,8 @@ class Game extends Component {
   validPlacement = (row, cell) => {
     // if (this.state.board[row][cell]) return false
 
+    if (!this.state.selected) return false
+
     if (this.state.selected.row === 'pool') {
       if (this.state.turn.player === 1) {
         return cell === 0
@@ -100,18 +102,31 @@ class Game extends Component {
     }
 
     // row and cell are clicked spot
-    const distance = Math.abs(row - this.state.selected.row) + Math.abs(cell - this.state.selected.cell)
+    let openPath = false
+    let count = this.state.selected.tile.move
+    const noJumps = (row, cell, count) => {
+      if (count < 0) return
+      if (this.state.selected.row === row && this.state.selected.cell === cell) {
+        openPath = true
+        return
+      }
+      if (this.state.board[row][cell]) return
+      let newCell
+      let newRow
+      if (row !== this.state.selected.row) {
+        if (row > this.state.selected.row) {newRow = row-1}
+        if (row < this.state.selected.row) {newRow = row+1}
+        noJumps(newRow, cell, count-1)
+      }
+      if (cell !== this.state.selected.cell) {
+        if (cell > this.state.selected.cell) newCell = cell-1
+        if (cell < this.state.selected.cell) newCell = cell+1
+        noJumps(row, newCell, count-1)
+      }
+    }
 
-    // TODO: prevent jumping over enemy squares
-
-    let openPath = true
-    //hmmmmm
-    // check spaces between (row,cell) and selected if movement is on same line
-    // if opp piece lies between them openPath=false
-    // if movement is DIAGONAL,
-    // check both adjacent squares in the direction of the diagonal && 
-
-    return (distance <= this.state.selected.tile.move && openPath)
+    noJumps(row, cell, count)
+    return openPath
   }
 
   validTargetExists = () => {
@@ -131,7 +146,7 @@ class Game extends Component {
 
   placeTile = (row, cell) => {
     if (!this.validPlacement(row, cell)) return
-    
+
     const newBoard = [...this.state.board]
     const newPool = [...this.state.pool]
     let newSelected
