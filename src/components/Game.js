@@ -28,6 +28,10 @@ class Game extends Component {
       player: 1,
       phase: 'buy',
       count: 0
+    },
+    money: {
+      player1: 20,
+      player2: 20
     }
   }
 
@@ -64,10 +68,11 @@ class Game extends Component {
   }
 
   buyTile = (cell) => {
-    // take money from player
+    const player = 'player' + this.state.turn.player
+    const cost = this.state.pool[cell].strength + this.state.pool[cell].move
+    const newMoney = {...this.state.money, [player]: this.state.money[player] - cost}
 
-    const newPool = [...this.state.pool]
-    newPool[cell].owner = this.state.turn.player
+    this.setState({money: newMoney})
   }
 
   selectTile = (row, cell) => {
@@ -251,10 +256,14 @@ class Game extends Component {
 
 
   poolClick = (row, cell) => {
-    if (this.state.turn.phase !== "buy") return
-    if (this.state.selected) return
+    if (this.state.turn.phase !== "buy" || this.state.selected) return
+
     this.buyTile(cell)
-    this.selectTile(row,cell)
+
+    const newPool = [...this.state.pool]
+    newPool[cell] = {...newPool[cell], owner: this.state.turn.player}
+
+    this.setState({pool: newPool}, () => this.selectTile(row,cell))
   }
 
 
@@ -262,8 +271,8 @@ class Game extends Component {
   render() {
     return(
       <div>
-        <Player id='1' username={'sunny'} />
-        <Player id='2' username={'arthur'} />
+        <Player id='1' username={'sunny'} money={this.state.money.player1} />
+        <Player id='2' username={'arthur'} money={this.state.money.player2} />
 
         <Board
         board={this.state.board}
