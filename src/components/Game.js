@@ -19,6 +19,7 @@ function startBoard() {
 
 class Game extends Component {
   state = {
+    gameOn: true,
     board: startBoard(),
     pool: [],
     selected: null,
@@ -28,8 +29,8 @@ class Game extends Component {
       count: 1
     },
     money: {
-      player1: 20,
-      player2: 20
+      player1: 6,
+      player2: 6
     },
     loggedIn: {
       player1: null,
@@ -75,11 +76,13 @@ class Game extends Component {
     const newTurn = {...this.state.turn, phase: phase}
 
     if (end === 'gameEnd') {
-      const winner = !(this.state.turn.player - 1) + 1
-      const loser = this.state.turn.player
+      const winner = this.state.loggedIn['player' + (!(this.state.turn.player - 1) + 1)]
+      const loser = this.state.loggedIn['player' + this.state.turn.player]
       const turns = this.state.turn.count
 
-      fetch('localhost:3000/game/create', {
+      console.log('Game End');
+
+      fetch('http://localhost:3000/games', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -93,6 +96,7 @@ class Game extends Component {
         })
       })
       // display something
+      phase = 'end'
     }
 
     if (nextTurn) {
@@ -352,14 +356,9 @@ class Game extends Component {
     this.setState({pool: newPool}, () => this.selectTile(row,cell))
   }
 
-
-
-  render() {
-    return(
-      <div>
-        <Player username={'sunny'} money={this.state.money.player1} turn={this.state.turn} player={1} username={this.state.loggedIn.player1} logIn={this.logIn} />
-        <Player username={'arthur'} money={this.state.money.player2} turn={this.state.turn} player={2} username={this.state.loggedIn.player2} logIn={this.logIn} />
-
+  gameOn = () => {
+    if (this.state.gameOn) {
+      return(
         <span id={'main'}>
           <Board
           board={this.state.board}
@@ -383,6 +382,20 @@ class Game extends Component {
             <div> Turn: {this.state.turn.count} </div>
           </div>
         </span>
+      )
+    } else {
+      return <div>hi</div>
+    }
+  }
+
+  render() {
+    return(
+      <div>
+        <Player username={'sunny'} money={this.state.money.player1} turn={this.state.turn} player={1} username={this.state.loggedIn.player1} logIn={this.logIn} />
+        <Player username={'arthur'} money={this.state.money.player2} turn={this.state.turn} player={2} username={this.state.loggedIn.player2} logIn={this.logIn} />
+
+        {this.gameOn()}
+
       </div>
     )
   }
