@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 
 class Player extends Component {
+  state = {
+    username: ''
+  }
+
   myTurn = () => {
     if (this.props.player !== this.props.turn.player) return ''
     return ' myTurn'
@@ -57,10 +61,23 @@ class Player extends Component {
     }
   }
 
+  handleChange = (event) => {
+    this.setState({
+      username: event.target.value
+    })
+  }
+
   render() {
     return(
       <div id={'player' + this.props.player} className={'player' + this.myTurn()}>
-        <h1 className={'playerName'}>{this.props.username}</h1>
+        {this.props.username ?
+          <h1 className={'playerName'}>{this.props.username}</h1>
+          :
+          <form onSubmit={(event) => this.props.logIn(event, this.state.username, this.props.player)}>
+            <input type={'text'} name={'username'} onChange={(event) => this.handleChange(event)} value={this.state.username} />
+          </form>
+        }
+
         <div>Money:</div>
         <div className={'playerMoney'}>{this.props.money}</div>
         <h3 className={'phaseMessage'}>{this.phaseMessage()}</h3>

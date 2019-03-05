@@ -3,8 +3,6 @@ import Board from './Board'
 import Pool from './Pool'
 import Player from './Player'
 
-// new Array(7).fill(new Array(7).fill(null))
-
 function startBoard() {
   return (
     [
@@ -32,10 +30,24 @@ class Game extends Component {
     money: {
       player1: 20,
       player2: 20
+    },
+    loggedIn: {
+      player1: null,
+      player2: null
     }
   }
 
-  setPhase = (isEnd=false) => {
+  logIn = (event, name, player) => {
+    event.preventDefault()
+
+    const newLoggedIn = {...this.state.loggedIn}
+
+    newLoggedIn['player' + player] = name
+
+    this.setState({loggedIn: newLoggedIn})
+  }
+
+  setPhase = (end=false) => {
     let phase
     let nextTurn = false
 
@@ -47,19 +59,41 @@ class Game extends Component {
         if (this.validTargetExists()) {
           phase = 'attack'
         } else {
-          isEnd = 'end'
+          end = 'turnEnd'
         }
         break;
       case 'attack':
-        isEnd = 'end'
+        end = 'turnEnd'
         break;
     }
-    if (isEnd === 'end') {
+
+    if (end === 'turnEnd') {
       phase = 'buy'
       nextTurn = true
     }
 
     const newTurn = {...this.state.turn, phase: phase}
+
+    if (end === 'gameEnd') {
+      const winner = !(this.state.turn.player - 1) + 1
+      const loser = this.state.turn.player
+      const turns = this.state.turn.count
+
+      fetch('localhost:3000/game/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          game: {
+            winner: winner,
+            loser: loser,
+            turns: turns
+          }
+        })
+      })
+      // display something
+    }
 
     if (nextTurn) {
       this.loot()
@@ -72,7 +106,31 @@ class Game extends Component {
     this.setState({
       turn: newTurn,
       selected: newSelected
+    },() => {if (this.gameEnd()) this.setPhase('gameEnd')})
+  }
+
+  gameEnd = () => {
+    if (this.state.turn.phase !== 'buy') return false
+
+
+    const canBuy = this.state.pool.find(tile => {
+      return tile.strength + tile.move <= this.state.money['player' + this.state.turn.player]
     })
+
+    if (canBuy) return false
+
+    const hasTile = this.state.board.find(row => {
+      return row.find(cell => {
+        if (cell) return cell.owner === this.state.turn.player
+      })
+    })
+
+    if (hasTile) {
+      this.setPhase()
+      return false
+    }
+
+    return true
   }
 
   loot = () => {
@@ -243,7 +301,7 @@ class Game extends Component {
         break
       case "attack":
         if (row === this.state.selected.row && cell === this.state.selected.cell) {
-          this.setPhase('end')
+          this.setPhase('turnEnd')
           return
         }
 
@@ -299,8 +357,8 @@ class Game extends Component {
   render() {
     return(
       <div>
-        <Player username={'sunny'} money={this.state.money.player1} turn={this.state.turn} player={1} />
-        <Player username={'arthur'} money={this.state.money.player2} turn={this.state.turn} player={2} />
+        <Player username={'sunny'} money={this.state.money.player1} turn={this.state.turn} player={1} username={this.state.loggedIn.player1} logIn={this.logIn} />
+        <Player username={'arthur'} money={this.state.money.player2} turn={this.state.turn} player={2} username={this.state.loggedIn.player2} logIn={this.logIn} />
 
         <span id={'main'}>
           <Board
@@ -319,7 +377,7 @@ class Game extends Component {
           handleClick={this.poolClick}
           />
 
-          <button onClick={() => {this.setPhase('end')}}>Next Turn</button>
+          <button onClick={() => {this.setPhase('turnEnd')}}>Next Turn</button>
 
           <div>
             <div> Turn: {this.state.turn.count} </div>
