@@ -1,3 +1,50 @@
+#player1 {
+  float: left;
+  margin-left: 60px
+}
+
+#player2 {
+  float: right;
+  margin-right: 60px
+}
+
+#player1.myTurn {
+  border: 2px solid red;
+}
+
+#player2.myTurn {
+  border: 2px solid blue;
+}
+
+#player1 .playerName {
+  color: red;
+}
+
+#player2 .playerName {
+  color: blue;
+}
+
+.player {
+  border: 2px solid #54514B;
+  background-color: #F6F4F0;
+  margin-top: 20px;
+  padding: 0px 40px;
+  width: 210px;
+  height: 600px;
+}
+
+.player .playerMoney {
+  font-size: 150%;
+}
+
+.player .phaseMessage {
+  margin-top: 60px;
+}
+
+.player .instructionMessage {
+  font-size: 90%;
+}
+
 .board {
   display: inline-grid;
   margin-top: 20px;

@@ -299,33 +299,32 @@ class Game extends Component {
   render() {
     return(
       <div>
-        <Player id='1' username={'sunny'} money={this.state.money.player1} />
-        <Player id='2' username={'arthur'} money={this.state.money.player2} />
+        <Player username={'sunny'} money={this.state.money.player1} turn={this.state.turn} player={1} />
+        <Player username={'arthur'} money={this.state.money.player2} turn={this.state.turn} player={2} />
 
-        <Board
-        board={this.state.board}
-        selected={this.state.selected}
-        handleClick={this.boardClick}
-        validPlacement={this.validPlacement}
-        turn={this.state.turn}
-        validTarget={this.validTarget}
-        />
+        <span id={'main'}>
+          <Board
+          board={this.state.board}
+          selected={this.state.selected}
+          handleClick={this.boardClick}
+          validPlacement={this.validPlacement}
+          turn={this.state.turn}
+          validTarget={this.validTarget}
+          />
 
-        <Pool
-        pool={this.state.pool}
-        fillPool={this.fillPool}
-        selected={this.state.selected}
-        handleClick={this.poolClick}
-        // turn={this.state.turn}
-        />
+          <Pool
+          pool={this.state.pool}
+          fillPool={this.fillPool}
+          selected={this.state.selected}
+          handleClick={this.poolClick}
+          />
 
-        <button onClick={() => {this.setPhase('end')}}>Next Turn</button>
+          <button onClick={() => {this.setPhase('end')}}>Next Turn</button>
 
-        <div>
-          <div> Player: {this.state.turn.player} </div>
-          <div> Phase: {this.state.turn.phase} </div>
-          <div> Turn: {this.state.turn.count} </div>
-        </div>
+          <div>
+            <div> Turn: {this.state.turn.count} </div>
+          </div>
+        </span>
       </div>
     )
   }
