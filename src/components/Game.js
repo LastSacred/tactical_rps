@@ -90,11 +90,9 @@ class Game extends Component {
 
   validPlacement = (row, cell) => {
     if (this.state.board[row][cell]) return false
-<<<<<<< HEAD
-=======
 
     if (!this.state.selected) return false
->>>>>>> sunny
+
 
     if (this.state.selected.row === 'pool') {
       if (this.state.turn.player === 1) {
