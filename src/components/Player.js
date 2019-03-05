@@ -74,7 +74,7 @@ class Player extends Component {
           <h1 className={'playerName'}>{this.props.username}</h1>
           :
           <form onSubmit={(event) => this.props.logIn(event, this.state.username, this.props.player)}>
-            <input type={'text'} name={'username'} onChange={(event) => this.handleChange(event)} value={this.state.username} />
+            <input type={'text'} name={'username'} className={'usernameForm'} onChange={(event) => this.handleChange(event)} value={this.state.username} />
           </form>
         }
 
