@@ -27,7 +27,7 @@ class Game extends Component {
     turn: {
       player: 1,
       phase: 'buy',
-      count: 0
+      count: 1
     },
     money: {
       player1: 20,
@@ -35,16 +35,44 @@ class Game extends Component {
     }
   }
 
-  setPhase = (phase, nextTurn=false) => {
-    // const phaseOrder = ['buy', 'move', 'attack']
-    if ((phase === "attack") && (!this.state.selected || !this.validTargetExists())) phase = "move"
+  setPhase = (isEnd=false) => {
+    let phase
+    let nextTurn = false
+
+    switch (this.state.turn.phase) {
+      case 'buy':
+        phase = 'move'
+        break;
+      case 'move':
+        if (this.validTargetExists()) {
+          phase = 'attack'
+        } else {
+          isEnd = 'end'
+        }
+        break;
+      case 'attack':
+        isEnd = 'end'
+        break;
+    }
+    if (isEnd === 'end') {
+      phase = 'buy'
+      nextTurn = true
+    }
+
+    // if ((phase === "attack") && (!this.state.selected || !this.validTargetExists())) {
+    //   phase = "buy"
+    //   nextTurn = true
+    // }
 
     const newTurn = {...this.state.turn, phase: phase}
+
     if (nextTurn) {
       newTurn.player = !(newTurn.player - 1) + 1
-      newTurn.count += 1
+      if (newTurn.player === 1) newTurn.count += 1
     }
+
     let newSelected = (phase === "attack" ? this.state.selected : null)
+
     this.setState({
       turn: newTurn,
       selected: newSelected
@@ -154,9 +182,6 @@ class Game extends Component {
 
     if (!(this.state.selected.row === row && this.state.selected.cell === cell) && !this.validPlacement(row, cell)) return
 
-    // if (!this.validPlacement(row, cell)) return
-
-
     const newBoard = [...this.state.board]
     const newPool = [...this.state.pool]
     let newSelected
@@ -170,15 +195,20 @@ class Game extends Component {
 
     newBoard[row][cell] = this.state.selected.tile
 
-    // call valid attack?
-    // break up setState
-
     this.setState({
       board: newBoard,
       pool: newPool,
       selected: newSelected
-    }, () => this.setPhase('attack'))
+    }, this.setPhase)
   }
+
+  // choosePhase = () => {
+  //   if (this.state.turn.phase === 'buy') {
+  //     this.setPhase('move')
+  //   } else if (this.s) {
+  //     this.setPhase('attack')
+  //   }
+  // }
 
   boardClick = (row, cell) => {
     const selected = this.state.selected
@@ -190,42 +220,24 @@ class Game extends Component {
         this.placeTile(row, cell)
         break
       case "move":
-        // if (!this.state.selected) {
-        //   this.selectTile(row, cell)
-        //   return
-        // }
-        // break
         if (selected) {
           this.placeTile(row, cell)
         } else {
           this.selectTile(row, cell)
         }
-        // this.setPhase("attack")
         break
       case "attack":
-        // const tile = this.state.board[row][cell]
         if (row === this.state.selected.row && cell === this.state.selected.cell) {
-          this.setPhase('move')
+          this.setPhase('end')
           return
         }
 
         if (!this.validTarget(row, cell, tile)) return
 
-        // if (!this.validTarget) return
         this.fight(row, cell)
-        this.setPhase("move")
+        this.setPhase()
         break
     }
-
-    // if (selected) {
-    //   if (row === selected.row && cell === selected.cell) {
-    //     this.setState({selected: null})
-    //   } else {
-    //     this.placeTile(row, cell)
-    //   }
-    // } else {
-    //   this.selectTile(row, cell)
-    // }
   }
 
   fight = (row, cell) => {
@@ -257,6 +269,7 @@ class Game extends Component {
 
   poolClick = (row, cell) => {
     if (this.state.turn.phase !== "buy" || this.state.selected) return
+    if ((this.state.pool[cell].strength + this.state.pool[cell].move) > this.state.money['player' + this.state.turn.player]) return
 
     this.buyTile(cell)
 
@@ -291,7 +304,13 @@ class Game extends Component {
         // turn={this.state.turn}
         />
 
-        <button onClick={() => {this.setPhase('buy', true)}}>Next Turn</button>
+        <button onClick={() => {this.setPhase('end')}}>Next Turn</button>
+
+        <div>
+          <div> Player: {this.state.turn.player} </div>
+          <div> Phase: {this.state.turn.phase} </div>
+          <div> Turn: {this.state.turn.count} </div>
+        </div>
       </div>
     )
   }
