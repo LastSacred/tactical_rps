@@ -416,7 +416,7 @@ class Game extends Component {
 
         {this.gameOn()}
 
-        <Link to={'/leaderboard'}>Leaderboard</Link>
+        <div><Link to={'/leaderboard'} className={'leaderboardLink'}>Leaderboard</Link></div>
       </div>
     )
   }
