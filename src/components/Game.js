@@ -59,14 +59,10 @@ class Game extends Component {
       nextTurn = true
     }
 
-    // if ((phase === "attack") && (!this.state.selected || !this.validTargetExists())) {
-    //   phase = "buy"
-    //   nextTurn = true
-    // }
-
     const newTurn = {...this.state.turn, phase: phase}
 
     if (nextTurn) {
+      this.loot()
       newTurn.player = !(newTurn.player - 1) + 1
       if (newTurn.player === 1) newTurn.count += 1
     }
@@ -77,6 +73,25 @@ class Game extends Component {
       turn: newTurn,
       selected: newSelected
     })
+  }
+
+  loot = () => {
+    const opponentSide = (cind) => {
+      if (this.state.turn.player === 1) return cind > 3
+      if (this.state.turn.player === 2) return cind < 3
+    }
+
+    let newMoney = {...this.state.money}
+
+    this.state.board.forEach(row => {
+      row.forEach((cell, cind) => {
+        if (opponentSide(cind) && cell && cell.owner === this.state.turn.player) {
+          newMoney['player' + this.state.turn.player] += 1
+        }
+      })
+    })
+
+    this.setState({money: newMoney})
   }
 
   fillPool = () => {
