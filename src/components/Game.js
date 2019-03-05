@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import Board from './Board'
 import Pool from './Pool'
+import Player from './Player'
 
 // new Array(7).fill(new Array(7).fill(null))
 
 function startBoard() {
   return (
     [
-      [{strength: 3, attack: 'scissors', move: 2, owner:1},{strength: 2, attack: 'paper', move: 1, owner:2},null,null,null,null,null],
+      [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
       [null,null,null,null,null,null,null],
@@ -89,6 +90,11 @@ class Game extends Component {
 
   validPlacement = (row, cell) => {
     if (this.state.board[row][cell]) return false
+<<<<<<< HEAD
+=======
+
+    if (!this.state.selected) return false
+>>>>>>> sunny
 
     if (this.state.selected.row === 'pool') {
       if (this.state.turn.player === 1) {
@@ -98,10 +104,32 @@ class Game extends Component {
       }
     }
 
-    // TODO: prevent jumping over enemy squares
+    // row and cell are clicked spot
+    let openPath = false
+    let count = this.state.selected.tile.move
+    const noJumps = (row, cell, count) => {
+      if (count < 0) return
+      if (this.state.selected.row === row && this.state.selected.cell === cell) {
+        openPath = true
+        return
+      }
+      if (this.state.board[row][cell]) return
+      let newCell
+      let newRow
+      if (row !== this.state.selected.row) {
+        if (row > this.state.selected.row) {newRow = row-1}
+        if (row < this.state.selected.row) {newRow = row+1}
+        noJumps(newRow, cell, count-1)
+      }
+      if (cell !== this.state.selected.cell) {
+        if (cell > this.state.selected.cell) newCell = cell-1
+        if (cell < this.state.selected.cell) newCell = cell+1
+        noJumps(row, newCell, count-1)
+      }
+    }
 
-    const distance = Math.abs(row - this.state.selected.row) + Math.abs(cell - this.state.selected.cell)
-    return distance <= this.state.selected.tile.move
+    noJumps(row, cell, count)
+    return openPath
   }
 
   validTargetExists = () => {
@@ -120,7 +148,11 @@ class Game extends Component {
   }
 
   placeTile = (row, cell) => {
+<<<<<<< HEAD
     if (!(this.state.selected.row === row && this.state.selected.cell === cell) && !this.validPlacement(row, cell)) return
+=======
+    if (!this.validPlacement(row, cell)) return
+>>>>>>> sunny
 
     const newBoard = [...this.state.board]
     const newPool = [...this.state.pool]
@@ -232,6 +264,9 @@ class Game extends Component {
   render() {
     return(
       <div>
+        <Player id='1' username={'sunny'} />
+        <Player id='2' username={'arthur'} />
+
         <Board
         board={this.state.board}
         selected={this.state.selected}
