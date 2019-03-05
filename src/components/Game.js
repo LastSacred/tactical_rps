@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Board from './Board'
 import Pool from './Pool'
 import Player from './Player'
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
 function startBoard() {
   return (
@@ -396,6 +397,7 @@ class Game extends Component {
 
         {this.gameOn()}
 
+        <Link to={'/leaderboard'}>Leaderboard</Link>
       </div>
     )
   }
