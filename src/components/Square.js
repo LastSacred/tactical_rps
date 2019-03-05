@@ -26,6 +26,7 @@ class Square extends Component {
     }
 
     if (this.props.cell === 2) cssClass += ' redSide'
+    if (this.props.cell === 3) cssClass += ' middle'
     if (this.props.cell === 4) cssClass += ' blueSide'
 
     return cssClass

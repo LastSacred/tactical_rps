@@ -16,10 +16,6 @@
   background-color: #DED6C5;
 }
 
-/* .square.validTarget {
-  border: 1px solid red;
-} */
-
 .square.tile {
   background-color: #E4D5B2;
 }
@@ -41,11 +37,16 @@
 }
 
 .square.selected {
-  border: 1px solid #FFFE00;
+  border: 1px solid #FFFE00 !important;
 }
 
 .game.board .square.redSide {
   border-right-color: red;
+}
+
+.game.board .square.middle {
+  border-left-color: red;
+  border-right-color: blue;
 }
 
 .game.board .square.blueSide {
