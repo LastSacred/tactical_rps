@@ -78,7 +78,7 @@ class Game extends Component {
       tile = this.state.board[row][cell]
     }
 
-    if (!tile) return
+    if (!tile || tile.owner !== this.state.turn.player) return
     this.setState({
       selected: {
         tile: tile,
@@ -89,7 +89,7 @@ class Game extends Component {
   }
 
   validPlacement = (row, cell) => {
-    // if (this.state.board[row][cell]) return false
+    if (this.state.board[row][cell]) return false
 
     if (!this.state.selected) return false
 
