@@ -3,6 +3,7 @@ import Board from './Board'
 import Pool from './Pool'
 import Player from './Player'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import fightsound from '../assets/attack.mp3';
 
 function startBoard() {
   return (
@@ -44,7 +45,9 @@ class Game extends Component {
     }
 
     this.state = this.initialState
+    this.fightsound = new Audio(fightsound)
   }
+
 
 
   logIn = (event, name, player) => {
@@ -343,6 +346,8 @@ class Game extends Component {
 
     newBoard[row][cell] = defender
     newBoard[this.state.selected.row][this.state.selected.cell] = attacker
+
+    this.fightsound.play()
 
     this.setState({
       board: newBoard,
