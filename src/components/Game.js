@@ -406,7 +406,7 @@ class Game extends Component {
     } else {
       return (
         <div className={'loginScreen'}>
-          <h1>Tactical Rock Paper Scisors</h1>
+          <h1>Tactical Rock Paper Scissors</h1>
           <p>Welcome! login or click below for leaderboard stats</p>
           <h3>The README</h3>
           <h4>Tiles</h4>

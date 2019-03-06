@@ -46,7 +46,7 @@ class Player extends Component {
             <p>Move one tile</p>
             <p>Attack if you end adjacent or diagonal to an enemy tile</p>
             <p>Gain money for each tile on the opponent's side at turn's end</p>
-            <p>You can't desellect a tile. Once you click it you must move it</p>
+            <p>You can't deselect a tile. Once you click it you must move it</p>
           </div>
         )
         break
