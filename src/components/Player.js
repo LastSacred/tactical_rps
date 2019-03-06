@@ -16,13 +16,15 @@ class Player extends Component {
     switch (this.props.turn.phase) {
       case 'buy':
         return 'Buy Phase'
-        break;
+        break
       case 'move':
         return 'Move Phase'
-        break;
+        break
       case 'attack':
         return 'Attack Phase'
-        break;
+        break
+      default:
+      return null
     }
   }
 
@@ -37,7 +39,7 @@ class Player extends Component {
             <p>The cost will be deducted from your money</p>
           </div>
         )
-        break;
+        break
       case 'Move Phase':
         return (
           <div>
@@ -46,7 +48,7 @@ class Player extends Component {
             <p>Gain money for each tile on the opponent's side at turn's end</p>
           </div>
         )
-        break;
+        break
       case 'Attack Phase':
         return (
           <div>
@@ -57,7 +59,9 @@ class Player extends Component {
             <p>Both take 2 in a tie</p>
           </div>
         )
-        break;
+        break
+        default:
+        return null
     }
   }
 

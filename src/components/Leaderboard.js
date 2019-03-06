@@ -10,8 +10,8 @@ class Leaderboard extends Component {
   render() {
 
     const showLeaders = () => {
-      return this.state.leaderboard.map((leader) => {
-        return <h3>{leader.username}: {leader.wins}-{leader.losses}</h3>
+      return this.state.leaderboard.map((leader, index) => {
+        return <h3 key={index}>{leader.username}: {leader.wins}-{leader.losses}</h3>
       })
     }
 
