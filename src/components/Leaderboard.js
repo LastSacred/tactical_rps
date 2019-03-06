@@ -11,7 +11,7 @@ class Leaderboard extends Component {
 
     const showLeaders = () => {
       return this.state.leaderboard.map((leader, index) => {
-        return <h3 key={index}>{leader.username}: {leader.wins}-{leader.losses}</h3>
+        return <div className="leaderentry leadername"><div key={index}>{leader.username}: {leader.wins}-{leader.losses}</div></div>
       })
     }
 
