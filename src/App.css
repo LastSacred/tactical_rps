@@ -33,6 +33,10 @@
   height: 600px;
 }
 
+.player .usernameForm {
+  margin: 40px 0px;
+}
+
 .player .playerMoney {
   font-size: 150%;
 }

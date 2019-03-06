@@ -6,12 +6,12 @@ class Player extends Component {
   }
 
   myTurn = () => {
-    if (this.props.player !== this.props.turn.player) return ''
+    if (!this.props.username || this.props.player !== this.props.turn.player) return ''
     return ' myTurn'
   }
 
   phaseMessage = () => {
-    if(this.props.player !== this.props.turn.player) return null
+    if(!this.myTurn()) return null
 
     switch (this.props.turn.phase) {
       case 'buy':

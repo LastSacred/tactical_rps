@@ -111,6 +111,7 @@ class Game extends Component {
 
     if (nextTurn) {
       this.loot()
+      this.cyclePool()
       newTurn.player = !(newTurn.player - 1) + 1
       if (newTurn.player === 1) newTurn.count += 1
     }
@@ -164,6 +165,10 @@ class Game extends Component {
     })
 
     this.setState({money: newMoney})
+  }
+
+  cyclePool = () => {
+    this.setState({pool: this.state.pool.slice(1)})
   }
 
   fillPool = () => {
