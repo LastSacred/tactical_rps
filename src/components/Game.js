@@ -408,6 +408,12 @@ class Game extends Component {
         <div className={'loginScreen'}>
           <h1>Tactical Rock Paper Scisors</h1>
           <p>Welcome! login or click below for leaderboard stats</p>
+          <h3>The README</h3>
+          <h4>Tiles</h4>
+          <p>Strength (top number): the tile dies when this reaches zero</p>
+          <p>Move (bottom number): how far it can move</p>
+          <h4>Win Condition</h4>
+          <p>Win when your opponent has no tiles on the board and not enough money to buy one</p>
         </div>
       )
     }

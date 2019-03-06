@@ -67,6 +67,14 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 
-## Game Notes
+# Tactical Rock Paper Scisors
+Welcome! login or click below for leaderboard stats
 
-gain <points> when a tile is on the opponents side
+## The README
+### Tiles
+Strength (top number): the tile dies when this reaches zero
+
+Move (bottom number): how far it can move
+
+### Win Condition
+Win when your opponent has no tiles on the board and not enough money to buy one
