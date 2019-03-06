@@ -60,6 +60,10 @@
   margin-top: 20px;
 }
 
+.loginScreen h1 {
+  text-shadow: 2px 2px grey;
+}
+
 .square {
   width: 60px;
   height: 60px;

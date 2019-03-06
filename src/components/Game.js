@@ -390,7 +390,7 @@ class Game extends Component {
           handleClick={this.poolClick}
           />
 
-          <button onClick={() => {this.setPhase('turnEnd')}}>Next Turn</button>
+          // <button onClick={() => {this.setPhase('turnEnd')}}>Next Turn</button>
 
           <div>
             <div> Turn: {this.state.turn.count} </div>
@@ -412,6 +412,11 @@ class Game extends Component {
           <h4>Tiles</h4>
           <p>Strength (top number): the tile dies when this reaches zero</p>
           <p>Move (bottom number): how far it can move</p>
+          <p>ROCK PAPER SCISSORS fight damage:
+            <div>loser takes 3</div>
+            <div>winner takes 1</div>
+            <div>tied, both take 2</div>
+          </p>
           <h4>Win Condition</h4>
           <p>Win when your opponent has no tiles on the board and not enough money to buy one</p>
         </div>
