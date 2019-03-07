@@ -4,6 +4,7 @@ import Pool from './Pool'
 import Player from './Player'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import fightsound from '../assets/attack.mp3';
+import brbrbrbr from '../assets/brbrbrbr.mp3';
 
 function startBoard() {
   return (
@@ -46,6 +47,7 @@ class Game extends Component {
 
     this.state = this.initialState
     this.fightsound = new Audio(fightsound)
+    this.brbrbrbr = new Audio(brbrbrbr)
   }
 
 
@@ -93,6 +95,7 @@ class Game extends Component {
       const turns = this.state.turn.count
 
       console.log('Game End');
+      this.brbrbrbr.play()
 
       fetch('http://localhost:3000/games', {
         method: 'POST',
@@ -395,7 +398,7 @@ class Game extends Component {
           handleClick={this.poolClick}
           />
 
-          // <button onClick={() => {this.setPhase('turnEnd')}}>Next Turn</button>
+          /*<button onClick={() => {this.setPhase('turnEnd')}}>Next Turn</button>*/
 
           <div>
             <div> Turn: {this.state.turn.count} </div>
